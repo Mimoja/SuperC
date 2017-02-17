@@ -10,112 +10,93 @@ COMMENT                 {MULTILINE_COMMENT}|{SINGLELINE_COMMENT}
 STRING 			L?\"(\\.|[^\\"])*\"
 %{
 #include <stdio.h>
-#define printf putchar(' ');printf
-void comment();
+#include "superC.tab.h"
 %}
 
 %%
 
-"import"		 { printf("IMPORT"); }
-"from"			 { printf("FROM"); }
-"as"			 { printf("AS"); }
+"import"		 { return IMPORT; }
+"from"			 { return FROM; }
+"as"			 { return AS; }
 
-"char"		 	 { printf("CHAR"); }
-"double"	     	 { printf("DOUBLE"); }
-"float"			 { printf("FLOAT"); }
-"int"			 { printf("INT"); }
-"int8_t" 		 { printf("INT8"); }
-"int16_t" 		 { printf("INT16"); }
-"int32_t" 		 { printf("INT32"); }
-"int64_t" 		 { printf("INT64"); }
-"long"			 { printf("LONG"); }
-"short"			 { printf("SHORT"); }
-"signed"		 { printf("SIGNED"); }
-"uint8_t" 		 { printf("UINT8"); }
-"uint16_t" 		 { printf("UINT16"); }
-"uint32_t" 		 { printf("UINT32"); }
-"uint64_t" 		 { printf("UINT64"); }
-"unsigned"		 { printf("UNSIGNED"); }
-"void"			 { printf("VOID"); }
+"char"		 	 { return CHAR; }
+"double"	     	 { return DOUBLE; }
+"float"			 { return FLOAT; }
+"int"			 { return INT; }
+"int8_t" 		 { return INT8; }
+"int16_t" 		 { return INT16; }
+"int32_t" 		 { return INT32; }
+"int64_t" 		 { return INT64; }
+"long"			 { return LONG; }
+"short"			 { return SHORT; }
+"signed"		 { return SIGNED; }
+"uint8_t" 		 { return UINT8; }
+"uint16_t" 		 { return UINT16; }
+"uint32_t" 		 { return UINT32; }
+"uint64_t" 		 { return UINT64; }
+"unsigned"		 { return UNSIGNED; }
+"void"			 { return VOID; }
 
-"class"  		 { printf("CLASS"); }
-"interface"  		 { printf("INTERFACE"); }
-"extends"  		 { printf("EXTENDS"); }
-"implements"  		 { printf("IMPLEMENTS"); }
-"static"  		 { printf("STATIC"); }
-"super"  		 { printf("SUPER"); }
-"public"  		 { printf("PUBLIC"); }
-"private"  		 { printf("PRIVATE"); }
-"protected"  		 { printf("PROTECTED"); }
+"class"  		 { return CLASS; }
+"interface"  		 { return INTERFACE; }
+"extends"  		 { return EXTENDS; }
+"implements"  		 { return IMPLEMENTS; }
+"static"  		 { return STATIC; }
+"super"  		 { return SUPER; }
+"public"  		 { return PUBLIC; }
+"private"  		 { return PRIVATE; }
+"protected"  		 { return PROTECTED; }
 
-"else"			 { printf("ELSE"); }
-"if"			 { printf("IF"); }
+"else"			 { return ELSE; }
+"if"			 { return IF; }
 
-"return"		 { printf("RETURN"); }
+"return"		 { return RETURN; }
 
-"while"			 { printf("WHILE"); }
-"do"  		 	 { printf("DO"); }
-"for"	  		 { printf("FOR"); }
-"break"  		 { printf("BREAK"); }
+"while"			 { return WHILE; }
+"do"  		 	 { return DO; }
+"for"	  		 { return FOR; }
+"break"  		 { return BREAK; }
 
-{STRING}		 { printf("STRING:%s",yytext); }
-{COMMENT}		 { printf("COMMENT:%s", yytext); }
-{HEX}			 { printf("HEX:%s",yytext); }
-[-+]?{DIGIT}+  	 	 { printf("NUMBER:%s",yytext); }
-{FLOATING}[fF]?		 { printf("FLOAT:%s",yytext); }
-{BIN}    	 	 { printf("BIN:%s",yytext); }
-{CHAR}({CHAR}|{DIGIT})*  { printf("ID:%s",yytext); }
+{STRING}		 { return STRING; }
+{COMMENT}		 { return COMMENT; }
+{HEX}			 { return HEX; }
+[-+]?{DIGIT}+  	 	 { return NUMBER; }
+{FLOATING}[fF]?		 { return FLOAT; }
+{BIN}    	 	 { return BIN; }
+{CHAR}({CHAR}|{DIGIT})*  { return ID; }
 
-">>="			 { printf("RIGHT_ASSIGN"); }
-"<<="			 { printf("LEFT_ASSIGN"); }
-"+="			 { printf("ADD_ASSIGN"); }
-"-="			 { printf("SUB_ASSIGN"); }
-"*="			 { printf("MUL_ASSIGN"); }
-"/="			 { printf("DIV_ASSIGN"); }
-">>"			 { printf("RIGHT_OP"); }
-"<<"			 { printf("LEFT_OP"); }
-"++"			 { printf("INC_OP"); }
-"--"			 { printf("DEC_OP"); }
-"<="			 { printf("LE_OP"); }
-">="			 { printf("GE_OP"); }
-"=="			 { printf("EQ_OP"); }
-"!="			 { printf("NE_OP"); }
-";"			 { printf(";"); }
-"{"			 { printf("{"); }
-"}"			 { printf("}"); }
-","			 { printf(","); }
-":"			 { printf(":"); }
-"="			 { printf("="); }
-"("			 { printf("("); }
-")"			 { printf(")"); }
-"["			 { printf("["); }
-"]"			 { printf("]"); }
-"."			 { printf("."); }
-"&"			 { printf("&"); }
-"!"			 { printf("!"); }
-"-"			 { printf("-"); }
-"+"			 { printf("+"); }
-"*"			 { printf("*"); }
-"/"			 { printf("/"); }
-"%"			 { printf("%s", "%"); }
-"<"			 { printf("<"); }
-">"			 { printf(">"); }
-"^"			 { printf("^"); }
-"|"			 { printf("|"); }
-"?"			 { printf("?"); }
+"+="			 { return ADD_ASSIGN; }
+"-="			 { return SUB_ASSIGN; }
+"*="			 { return MUL_ASSIGN; }
+"/="			 { return DIV_ASSIGN; }
+"++"			 { return INC_OP; }
+"--"			 { return DEC_OP; }
+"<="			 { return LE_OP; }
+">="			 { return GE_OP; }
+"=="			 { return EQ_OP; }
+"!="			 { return NE_OP; }
+";"			 { return ';'; }
+"{"			 { return '{'; }
+"}"			 { return '}'; }
+","			 { return ','; }
+":"			 { return ':'; }
+"="			 { return '='; }
+"("			 { return '('; }
+")"			 { return ')'; }
+"["			 { return '['; }
+"]"			 { return ']'; }
+"."			 { return '.'; }
+"&"			 { return '&'; }
+"!"			 { return '!'; }
+"-"			 { return '-'; }
+"+"			 { return '+'; }
+"*"			 { return '*'; }
+"/"			 { return '/'; }
+"%"			 { return '%'; }
+"<"			 { return '<'; }
+">"			 { return '>'; }
 
-\n([\t\v\f]?\n)*	 { printf("\n"); }
 [\t\v\f' ']		 { }
-.			 { printf("ERROR:%s", yytext); }
+.			 { return ERROR; }
 
-%%
 
-int yywrap()
-{
-	return(1);
-}
-
-int main(){
-  yylex();
-  putchar('\n');
-}
