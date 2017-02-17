@@ -104,9 +104,9 @@ void comment();
 "|"			 { printf("|"); }
 "?"			 { printf("?"); }
 
-(\n)([\t\v\f]?\n)*	 { printf("\n"); }
-[\t\v\f]		 { }
-.			 { }
+\n([\t\v\f]?\n)*	 { printf("\n"); }
+[\t\v\f' ']		 { }
+.			 { printf("ERROR:%s", yytext); }
 
 %%
 
