@@ -1,1 +1,1 @@
-flex superC.lex && cc lex.yy.c -o scl && ./scl  < test.c
+bison -d superC.y && flex superC.lex && cc superC.tab.c lex.yy.c -o scp && ./scp  < test.c
