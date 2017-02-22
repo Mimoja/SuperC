@@ -1,64 +1,62 @@
 
 %{
-#include <stdio.h>
-int yylex(); 
-int yyerror(const char *p) { printf("Error: %s", p); return 1;}
+	#include "workunits.h"
+	#include <stdio.h>
+	int yylex(); 
+	int yyerror(const char *p) { printf("Error: %s  \n", p ); return 1;}
+	ProgramNode* root = new ProgramNode();
+
 %}
 
-%token IMPORT FROM AS
+%union {
+	Node *node;
+	ImportNode *importNode;
+	char *string;
+	int token;
+}
 
-%token CHAR DOUBLE FLOAT INT INT8 INT16 INT32 INT64 LONG
-%token SHORT SIGNED UINT8 UINT16 UINT32 UINT64 UNSIGNED VOID
+%token <token> IMPORT FROM AS
 
-%token CLASS INTERFACE EXTENDS IMPLEMENTS STATIC SUPER PUBLIC PRIVATE PROTECTED
+%token <token> CHAR DOUBLE FLOAT INT INT8 INT16 INT32 INT64 LONG
+%token <token> SHORT SIGNED UINT8 UINT16 UINT32 UINT64 UNSIGNED VOID
 
-%token ELSE IF
+%token <token> CLASS INTERFACE EXTENDS IMPLEMENTS STATIC SUPER PUBLIC PRIVATE PROTECTED
 
-%token RETURN
+%token <token> ELSE IF
 
-%token WHILE DO FOR BREAK
+%token <token> RETURN
 
-%token INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-%token SUB_ASSIGN
+%token <token> WHILE DO FOR BREAK
 
-%token STRING COMMENT HEX NUMBER BIN ID
+%token <token> INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
+%token <token> AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token <token> SUB_ASSIGN
 
-%token ERROR
+%token <string> STRING COMMENT HEX NUMBER FLOATING BIN ID
 
-%%
-start
-	: import start
-	| definition start
-	;
 
-import 
-	: IMPORT ID FROM STRING           { printf("import"); }
-	| IMPORT ID FROM STRING AS ID     { printf("import as"); }
-	;
-
-definition
-	: class_definition     
-	/*| function_definition
-        | interface_definition
-	| variable_definition
-	| definition definition*/
-	;
-
-class_definition     
-	: CLASS ID			{ printf("class definiton"); }
-	;
-
+%start program
 
 %%
 
-int yywrap()
-{
-	return(1);
-}
+import_extension
+	:							  { $<string>$ = 0; }
+	| AS ID    					  { $<string>$ = $2; }
+	;
 
-int main()
-{
-  yyparse();
-  return 0;
-}
+import_statement
+	: IMPORT ID FROM STRING import_extension ';'  { $<importNode>$ = new ImportNode($<string>2, $<string>4, $<string>5); }
+	;
+
+import_unit
+	: import_statement 				{ root->imports.push_back($<importNode>1); }
+	| import_unit import_unit
+	;
+
+
+program
+	: import_unit					{ }
+	;				
+
+
+%%
